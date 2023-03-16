@@ -1,7 +1,15 @@
 #!/usr/bin/env php
 
 <?php
+// adding command to target the specific uuid of the gpu
+if ($argv[2] == 'release' && $argv[3] == 'end'){
+        shell_exec('date +"%b %d %H:%M:%S libvirt hook: Setting nVidia Promiscuous mode to 1" >> /var/log/syslog');
+        shell_exec('nvidia-smi --id=<TO FILL> --persistence-mode=1');
+}
+
 if (!isset($argv[2]) || $argv[2] != 'start') {
+	shell_exec('date +"%b %d %H:%M:%S libvirt hook: Setting nVidia Promiscuous mode to 0" >> /var/log/syslog');
+        shell_exec('nvidia-smi --id=<TO FILL> --persistence-mode=0');
 	exit(0);
 }
 
