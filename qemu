@@ -1,15 +1,19 @@
 #!/usr/bin/env php
 
 <?php
-// adding command to target the specific uuid of the gpu
+// vm stop
 if ($argv[2] == 'release' && $argv[3] == 'end'){
-        shell_exec('date +"%b %d %H:%M:%S libvirt hook: Setting nVidia Promiscuous mode to 1" >> /var/log/syslog');
-        shell_exec('nvidia-smi --id=<TO FILL> --persistence-mode=1');
+        shell_exec('date +"%b %d %H:%M:%S libvirt hook: Setting NVIDIA driver persistence to 1" >> /var/log/syslog');
+	shell_exec('nvidia-smi --id=<TO FILL> --persistence-mode=1'); // only target the gpu used by the vm
+	shell_exec('date +"%b %d %H:%M:%S libvirt hook: Setting CPU governor to powersave" >> /var/log/syslog');
+	shell_exec('/usr/local/sbin/rc.tweaks set_governor powersave');
 }
-
+// vm start
 if (!isset($argv[2]) || $argv[2] != 'start') {
-	shell_exec('date +"%b %d %H:%M:%S libvirt hook: Setting nVidia Promiscuous mode to 0" >> /var/log/syslog');
-        shell_exec('nvidia-smi --id=<TO FILL> --persistence-mode=0');
+	shell_exec('date +"%b %d %H:%M:%S libvirt hook: Setting NVIDIA driver persistence to 0" >> /var/log/syslog');
+        shell_exec('nvidia-smi --id=<TO FILL> --persistence-mode=0'); // only target the gpu used by the vm
+	shell_exec('date +"%b %d %H:%M:%S libvirt hook: Setting CPU governor to performance" >> /var/log/syslog');
+	shell_exec('/usr/local/sbin/rc.tweaks set_governor performance');
 	exit(0);
 }
 
